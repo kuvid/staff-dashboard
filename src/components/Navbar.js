@@ -38,7 +38,7 @@ const Navbar = () => {
             <IconContext.Provider value={{ color: '#fff'}}>
                 <Nav>
                     <NavbarContainer>
-                        <NavLogo to="/">
+                        <NavLogo to="/login">
                             KUvid Dashboard
                         </NavLogo>
                         <MenuIcon onClick={handleClick}>
