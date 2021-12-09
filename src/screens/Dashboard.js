@@ -1,65 +1,19 @@
-import React from "react";
-import Chart from "react-apexcharts";
+import React, {useEffect, useState} from "react";
 import Barchart from "../components/Barchart";
 import StatsCard from '../components/Card';
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navbar';
+import axios from 'axios';
 
-function Dashboard(props) {
-  //Oriantation Check
-  let ishorizontal = true;
-
-  //Apexchart Objects
-  let series = [{
-    name:"İyileşen",
-    data: [44, 55, 41, 64, 22, 43, 21]
-  }, {
-      name:"Aktif (İzolasyonda)",
-    data: [53, 32, 33, 52, 13, 44, 32]
-  }];
-
-  let chartOptions = {
-    chart: {
-        type: 'bar',
-        height: 430
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          dataLabels: {
-            position: 'top',
-          },
-        }
-      },
-      dataLabels: {
-        enabled: true,
-        offsetX: -6,
-        style: {
-          fontSize: '12px',
-          colors: ['#fff']
-        }
-      },
-      stroke: {
-        show: true,
-        width: 1,
-        colors: ['#fff']
-      },
-      tooltip: {
-        shared: true,
-        intersect: false
-      },
-      xaxis: {
-        categories: ["29.11.2021", "30.11.2021", "01.12.2021", "02.12.2021", "03.12.2021", "04.12.2021", "05.12.2021"],
-      },
-  }
+function Dashboard() {
 
   return (
     <div>  
         <Navbar/>  
         <Barchart/>
-        <div style={{"display": "flex", "justify-content": "space-between"}}>
-            <StatsCard title={"Aktif Vaka Oranı"} number={"120"}/>
-            <StatsCard title={"COVID Geçiren Öğrencilerin Oranı"} number={"10%"}/>
-            <StatsCard title={"COVID Geçiren Öğrenci Sayısı"} number={"500"}/>
+        <div style={{"display": "flex", "justifyContent": "space-between"}}>
+            <StatsCard title={"COVID Geçiren Öğrencilerin Toplama Oranı"} number={2}/>
+            <StatsCard title={"COVID Geçiren Öğrencilerin Sayısı"} number={1}/>
+            <StatsCard title={"İyileşen Öğrenci Sayısı"} number={0}/>
         </div>
     </div>
   );

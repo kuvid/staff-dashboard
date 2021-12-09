@@ -1,12 +1,14 @@
 import React, { useReducer, useState } from 'react';
 import Background from '../assets/koc-background.jpg';
 import Navbar from '../components/Navbar'
+import axios from "axios";
 
 const formReducer = (state, event) => {
   if(event.reset) {
    return {
      covid_status: '',
-     name: '',
+     covid_code: '',
+     update_date: '',
    }
  }
   return {
@@ -41,9 +43,9 @@ const styles = {
   }
 
 function Admin() {
-  const [formData, setFormData] = useReducer(formReducer, {
-  });
+  const [formData, setFormData] = useReducer(formReducer, {});
   const [submitting, setSubmitting] = useState(false);
+  const idToken = localStorage.getItem("idToken");
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -55,6 +57,23 @@ function Admin() {
        reset: true
      })
     }, 3000);
+    console.log(formData);
+    console.log(idToken);
+
+     axios
+      .post(
+        "https://3mc5pe0gw4.execute-api.eu-central-1.amazonaws.com/Production/kuvid_admin_change_status",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${idToken}` /* this is the JWT token from AWS Cognito. */,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   const handleChange = event => {
@@ -77,7 +96,7 @@ function Admin() {
         <fieldset style={{"marginBottom":"4vw","padding":"4vw","borderWidth":"0"}}>
           <label>
             <p style={styles.title}><strong>Patient ID</strong></p>
-            <input style={{"borderRadius":"10px","width":"15vw","height":"2.5vw","textAlign":"center","fontSize":"1.2vw","marginBottom":"2vw"}} name="name" onChange={handleChange} value={formData.name || ''}/>
+            <input style={{"borderRadius":"10px","width":"15vw","height":"2.5vw","textAlign":"center","fontSize":"1.2vw","marginBottom":"2vw"}} name="covid_code" onChange={handleChange} value={formData.covid_code || ''}/>
           </label>
           <label>
             <p style={styles.title}><strong>Covid Status</strong></p>
@@ -89,11 +108,11 @@ function Admin() {
           </label>
           <label>
             <p style={styles.title}><strong>Date</strong></p>
-            <input style={{"borderRadius":"10px","width":"15vw","height":"2.5vw","textAlign":"center","fontSize":"1.2vw"}} type="date" id="start" name="trip-start"
-                min="2021-01-01" max="2023-12-31"/>
+            <input style={{"borderRadius":"10px","width":"15vw","height":"2.5vw","textAlign":"center","fontSize":"1.2vw"}} type="date" id="start" name="update_date"
+                min="2021-01-01" max="2023-12-31" onChange={handleChange} value={formData.update_date || ''}/>
           </label>
         </fieldset>
-        <button style={{"width":"10vw","height":"5vh","borderRadius":"10px","fontSize":"1.8vw","marginBottom":"3vw"}} type="submit"><strong>Submit</strong></button>
+        <button onClick={handleSubmit} style={{"width":"10vw","height":"5vh","borderRadius":"10px","fontSize":"1.8vw","marginBottom":"3vw"}} type="submit"><strong>Submit</strong></button>
       </form>
     </div>
     </div>

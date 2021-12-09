@@ -1,10 +1,9 @@
 import React from 'react';
-import { useState, useContext } from 'react';
+import { useState} from 'react';
 import Auth from '@aws-amplify/auth';
-import AuthContext from '../context/AuthContext';
 import { Col, Row, Form,FormControl, Button } from '@themesberg/react-bootstrap';
 import Background from '../assets/koc-background.jpg';
-import { Link} from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 
 const styles = {
     header: {
@@ -32,49 +31,43 @@ const styles = {
     }
   }
 
+
 export default function LoginScreen() {
 
-    const signIn = useContext(AuthContext);
-    const [email, onChangeEmail] = useState('');
-    const [password, onChangePassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [link, setLink] = useState('/dashboard');
-    const login = async () => {
-        console.log("Email ",email);
-        console.log("Password ",password);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [path, setPath] = useState("");
 
-        if (email.length > 4 && password.length > 2) {
-          await Auth.signIn(email, password)
-            .then((user) => {
-              signIn(user);
-            })
-            .then((user) => console.log(user))
-            .catch((err) => {
-              if (!err.message) {
-                console.log('1 Error when signing in: ', err);
-              } else {
-                if (err.message) {
-                  setErrorMessage(err.message);
-                }
-              }
-            });
-        } else {
-          setErrorMessage('Provide a valid email and password');
+  const login = (e) => {
+    e.preventDefault();
+    Auth.signIn({
+      username: email,
+      password,
+    })
+      .then((user) => {
+        console.log(user.signInUserSession.idToken.jwtToken);
+        if(user) {
+          localStorage.setItem("idToken",user.signInUserSession.idToken.jwtToken);
+          localStorage.setItem("isAuthenticated", "true");
+          setPath("/dashboard");
         }
-      };
-
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
     return (
     <div style={styles.header}>
-        <h1 style={{"textAlign":"center","marginBottom":"1vw"}}><br/></h1>
+        <h1 style={{"textAlign":"center","marginBottom":"0.5vw","color":"white","fontSize":"8vh"}}><br/>KUvid Admin Dashboard</h1>
         <div style={styles.content}><br/>
         <Form>
             <Form.Group style={styles.inputbox} className="mb-3" controlId="exampleForm.ControlInput1">
                 <Form.Label>KU Mail Address</Form.Label><br/>
                 <FormControl 
-                    type='email'
-                    name='email' 
-                    placeholder='name@example.com' 
-                    onChange={(event) => onChangeEmail(event.target.value)}
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="email"
                     style={{"borderRadius":"10px","width":"15vw","height":"2.5vw","textAlign":"center","fontSize":"1.2vw"}}
                 />
             </Form.Group>
@@ -84,20 +77,20 @@ export default function LoginScreen() {
                 </Form.Label><br/>
                 <Col sm="10">
                 <FormControl 
-                    type='password'
-                    name='password' 
-                    placeholder='Password' 
-                    onChange={(event) => onChangePassword(event.target.value)}
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="password"
                     style={{"borderRadius":"10px","width":"15vw","height":"2.5vw","textAlign":"center","fontSize":"1.2vw"}}
                 />
                 </Col>
             </Form.Group>
         </Form>
-        <Button style={{"width":"10vw","height":"5vh","borderRadius":"10px","fontSize":"1.8vw","marginBottom":"5vw"}} onClick={()=>login()}>
-            <strong>
-            <Link to={link} style={{ textDecoration: 'none' }}>LOGIN</Link> 
-            </strong>
+        <Button style={{"width":"10vw","height":"5vh","borderRadius":"10px","fontSize":"1.8vw","marginBottom":"5vw"}} onClick={login}>
+            <strong>LOGIN</strong>
+            {path == "/dashboard" ? <Navigate to="/dashboard" /> : null}
         </Button>
+
         </div>
     </div>
     );
