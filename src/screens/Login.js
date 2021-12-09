@@ -4,6 +4,7 @@ import Auth from '@aws-amplify/auth';
 import { Col, Row, Form,FormControl, Button } from '@themesberg/react-bootstrap';
 import Background from '../assets/koc-background.jpg';
 import { Navigate } from 'react-router-dom';
+import { IconAirlineSeatLegroomExtra } from '@aws-amplify/ui-react';
 
 const styles = {
     header: {
@@ -37,6 +38,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [path, setPath] = useState("");
+  const [isAlert, setAlert] = useState(false);
 
   const login = (e) => {
     e.preventDefault();
@@ -47,12 +49,14 @@ export default function LoginScreen() {
       .then((user) => {
         console.log(user.signInUserSession.idToken.jwtToken);
         if(user) {
+          setAlert(false);
           localStorage.setItem("idToken",user.signInUserSession.idToken.jwtToken);
           localStorage.setItem("isAuthenticated", "true");
           setPath("/dashboard");
         }
       })
       .catch((err) => {
+        alert("Wrong Email or Password! Try again!");
         console.log(err);
       });
   };

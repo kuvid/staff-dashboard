@@ -74,6 +74,7 @@ function Admin() {
       .catch((error) => {
         console.log(error);
       });
+      alert(`You have submitted updated ${formData.covid_status} covid status for ${formData.covid_code} on ${formData.update_date}`);
   }
 
   const handleChange = event => {
