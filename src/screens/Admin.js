@@ -7,7 +7,7 @@ const formReducer = (state, event) => {
   if(event.reset) {
    return {
      covid_status: '',
-     covid_code: '',
+     student_id: '',
      update_date: '',
    }
  }
@@ -75,6 +75,7 @@ function Admin() {
         console.log(error);
       });
       alert(`You have submitted updated ${formData.covid_status} covid status for ${formData.covid_code} on ${formData.update_date}`);
+
   }
 
   const handleChange = event => {
@@ -97,7 +98,7 @@ function Admin() {
         <fieldset style={{"marginBottom":"4vw","padding":"4vw","borderWidth":"0"}}>
           <label>
             <p style={styles.title}><strong>Patient ID</strong></p>
-            <input style={{"borderRadius":"10px","width":"15vw","height":"2.5vw","textAlign":"center","fontSize":"1.2vw","marginBottom":"2vw"}} name="covid_code" onChange={handleChange} value={formData.covid_code || ''}/>
+            <input style={{"borderRadius":"10px","width":"15vw","height":"2.5vw","textAlign":"center","fontSize":"1.2vw","marginBottom":"2vw"}} name="student_id" onChange={handleChange} value={formData.student_id || ''}/>
           </label>
           <label>
             <p style={styles.title}><strong>Covid Status</strong></p>

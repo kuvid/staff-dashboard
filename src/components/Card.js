@@ -32,7 +32,8 @@ function StatsCard(props) {
   <Card.Body style={{"fontSize":"20px","color":"white","textAlign":"center"}}>
     <Card.Title>{props.title}</Card.Title>
     <Card.Text style={{"fontSize":"30px"}}><br/>
-    <strong>{props.number==2? `${cardData[2]*100} %` : cardData[props.number]}</strong>
+    <strong>{props.number==2? `${(Math.round((cardData[2]*100) * 100) / 100).toFixed(2)}
+ %` : cardData[props.number]}</strong>
     </Card.Text>
   </Card.Body>
 </Card>
